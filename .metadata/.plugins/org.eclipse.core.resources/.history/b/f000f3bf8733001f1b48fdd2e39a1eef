@@ -1,0 +1,64 @@
+package fileupload;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
+
+public class FileUtil {
+	
+	//요청 객체 내에 전송된 파일을 디스크에 저장하고 파일명 리턴
+	public static String uploadFile(HttpServletRequest req, String sDirectory)
+			throws ServletException, IOException{
+		//MultiPart에서 name이 "ofile"인 Part를 가져와서 part변수에 할당
+		Part part = req.getPart("ofile");
+		
+			//part 객체의 헤더값 중 content-disposition 읽어오기
+			String partHeader = part.getHeader("content-disposition");
+			
+			//[partHeader=form-data; name="attachedFile"; filename="파일명.jpg"]
+			System.out.println("partHeader="+ partHeader);
+			
+			//헤더값에서 파일명 잘라내기
+			//phArr =>[0]:[form-data; name="attachedFile";],[1]:["파일명.jpg"]
+			String[] phArr = partHeader.split("filename=");
+	
+			//1에 들어있는것에 공백자르고 \" 는 "" 자체 => 다 없애버림 => 파일명.jpg만 남게됨
+			String originalFileName = phArr[1].trim().replace("\"", "");
+		
+		//전송된 파일있으면 디렉토리에 저장 실제로 디스크에 써짐
+		if(!originalFileName.isEmpty()) {
+			part.write(sDirectory+ File.separator +originalFileName);
+		}
+		
+		//원본 파일명 반환
+		return originalFileName;
+		
+	}
+	
+	
+	
+	//덮어쓰지 않게 파일명 변경
+	public static String renameFile(String sDirectory, String fileName) {
+		String ext = fileName.substring(fileName.lastIndexOf("."));
+		//새 파일 이름 . new date하면 새로운 파일이 만들어짐
+		String now = new SimpleDateFormat("yyyyMMdd_HmsS").format(new Date());
+		//확장자 붙여서 
+		String newFileName = now + ext;
+		File oldFile = new File(sDirectory + File.separator + fileName);
+		File newFile = new File(sDirectory + File.separator + newFileName);
+		oldFile.renameTo(newFile);
+		
+		return newFileName;
+		
+	}
+	
+	public static void main(String[] args) {
+		FileUtil.renameFile("c:\\Temp", "a.txt");
+	}
+
+}

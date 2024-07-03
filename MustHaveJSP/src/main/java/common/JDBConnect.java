@@ -7,7 +7,11 @@ import jakarta.servlet.ServletContext;
 
 public class JDBConnect {
 	
-	private Connection con; 
+	private Connection con;
+//	public Statement stmt;
+//	public PreparedStatement psmt;
+//	public ResultSet rs;
+	
 	
 	public JDBConnect() {
 		try {
@@ -74,6 +78,6 @@ public class JDBConnect {
 	}
 	
 	
-	}
+}
 
 

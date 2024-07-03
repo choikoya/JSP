@@ -14,7 +14,7 @@
 			return a;
 		}
 	
-	public int 1cm(String num1, String num2){
+	public int lcm(String num1, String num2){
 		if(num1 == null || num1.isEmpty() || num2 == null || num2.isEmpty())
 			return 0;
 		int a=Integer.parseInt(num1);
